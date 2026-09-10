@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071016">
+  <meta name="description" content="Progress lokalisasi proyek KurageTL: terjemahan, editing, UI, engine, dan quality check.">
+  <meta property="og:title" content="Progress TL — KurageTL">
+  <meta property="og:description" content="Pantau perkembangan proyek lokalisasi KurageTL secara rinci.">
+  <title>Progress TL — KurageTL</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">Lewati ke isi</a>
+
+  <header class="site-header" id="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="index.html" aria-label="KurageTL, halaman utama">
+        <span class="brand-mark" aria-hidden="true">KTL</span>
+        <span class="brand-type">KurageTL<small>JP → ID / ARCHIVE</small></span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Buka menu">
+        <span></span>
+      </button>
+
+      <nav class="nav" id="main-nav" aria-label="Navigasi utama">
+        <a href="index.html">Beranda</a>
+        <a href="index.html#proyek">Proyek</a>
+        <a href="progress.html" aria-current="page">Progress</a>
+        <a href="index.html#cara-pasang">Cara Pasang</a>
+        <span class="nav-signal"><i aria-hidden="true"></i>TRANSLATING</span>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="progress-hero">
+      <div class="shell">
+        <div class="progress-intro">
+          <div class="reveal">
+            <p class="eyebrow">Live Translation Record</p>
+            <h1>Catatan<br><em>progress TL.</em></h1>
+          </div>
+          <p class="reveal">Persentase dipisahkan per tahap supaya status proyek tidak berhenti pada “sedang dikerjakan”. Angka diperbarui setelah satu bagian benar-benar selesai diperiksa.</p>
+        </div>
+
+        <div class="overview-strip reveal" aria-label="Ringkasan progress">
+          <div class="overview-stat">
+            <small>Proyek aktif</small>
+            <strong id="active-count">—</strong>
+          </div>
+          <div class="overview-stat">
+            <small>Rata-rata keseluruhan</small>
+            <strong id="overall-average">—</strong>
+          </div>
+          <div class="overview-stat">
+            <small>Pembaruan terakhir</small>
+            <strong id="last-updated">—</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section progress-section">
+      <div class="shell">
+        <div class="progress-note">
+          <span>PROJECT STATUS / KURAGETL ARCHIVE</span>
+          <span>0% — 100%</span>
+        </div>
+        <div class="progress-list" id="progress-list" aria-live="polite">
+          <div class="empty-data">Memuat data progress…</div>
+        </div>
+        <noscript><div class="empty-data">Aktifkan JavaScript untuk melihat persentase progress.</div></noscript>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell method-grid">
+        <div class="method-copy reveal">
+          <span class="section-index">Cara Membaca</span>
+          <h2>Lima tahap, satu patch.</h2>
+          <p>Nilai keseluruhan merupakan rata-rata dari lima pekerjaan utama. Angka dapat berubah setelah pemeriksaan ulang menemukan bagian yang perlu dikerjakan kembali.</p>
+        </div>
+        <div class="method-list">
+          <article class="method-item reveal">
+            <span>01</span><strong>Terjemahan</strong><p>Naskah Jepang telah dialihkan ke bahasa Indonesia tanpa menghitung penyuntingan akhir.</p>
+          </article>
+          <article class="method-item reveal">
+            <span>02</span><strong>Editing</strong><p>Dialog, narasi, istilah, konsistensi nama, dan alur kalimat sudah diperiksa kembali.</p>
+          </article>
+          <article class="method-item reveal">
+            <span>03</span><strong>UI & Gambar</strong><p>Menu, tombol, splash screen, dan gambar yang memuat teks telah disesuaikan.</p>
+          </article>
+          <article class="method-item reveal">
+            <span>04</span><strong>Engine</strong><p>Font, posisi teks, word wrap, script, dan kompatibilitas versi game telah ditangani.</p>
+          </article>
+          <article class="method-item reveal">
+            <span>05</span><strong>Quality Check</strong><p>Patch telah dimainkan untuk menemukan typo, teks terpotong, crash, dan masalah instalasi.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell log">
+        <div class="reveal">
+          <span class="section-index">Update Log</span>
+          <h2 class="log-title">Jejak pembaruan.</h2>
+        </div>
+        <div class="log-list" id="update-log">
+          <div class="empty-data">Belum ada catatan pembaruan.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-top">
+        <p class="footer-title">Setiap baris<br>mendekati <em>rilis.</em></p>
+        <nav class="footer-nav" aria-label="Navigasi kaki halaman">
+          <a href="index.html">Beranda</a>
+          <a href="index.html#proyek">Proyek</a>
+          <a href="progress.html">Progress TL</a>
+          <a href="index.html#cara-pasang">Cara Pasang</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year></span> KURAGETL / PROGRESS RECORD</span>
+        <span>PERSENTASE DAPAT BERUBAH SETELAH PEMERIKSAAN ULANG</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="progress-data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
