@@ -1,0 +1,1696 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1018">
+  <meta name="description" content="KurageTL, patch bahasa Indonesia untuk visual novel dan RPG Maker.">
+  <meta property="og:title" content="KurageTL | Patch Indonesia untuk VN & RPG Maker">
+  <meta property="og:description" content="Katalog proyek, panduan pemasangan, dan catatan rilis patch bahasa Indonesia.">
+  <title>KurageTL | Patch Indonesia</title>
+  <style>
+    :root {
+      --ink: #0d1018;
+      --ink-2: #141925;
+      --slate: #202737;
+      --slate-2: #2c3548;
+      --paper: #eef0f5;
+      --muted: #aeb5c4;
+      --rose: #d45c75;
+      --rose-soft: #f0a4b4;
+      --line: rgba(238, 240, 245, .13);
+      --line-strong: rgba(238, 240, 245, .25);
+      --shadow: 0 28px 90px rgba(0, 0, 0, .42);
+      --radius: 16px;
+      --page-scroll: 0;
+      --hero-progress: 0;
+      --pointer-x: 0;
+      --pointer-y: 0;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      color-scheme: dark;
+      background: var(--ink);
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--paper);
+      background:
+        radial-gradient(circle at 12% 14%, rgba(212, 92, 117, .08), transparent 27rem),
+        radial-gradient(circle at 88% 42%, rgba(89, 101, 132, .12), transparent 34rem),
+        var(--ink);
+      font-family: "Segoe UI", "Noto Sans", "Noto Sans JP", system-ui, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+      opacity: .055;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+    }
+
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+
+    :focus-visible {
+      outline: 3px solid var(--rose-soft);
+      outline-offset: 4px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 300;
+      padding: .7rem 1rem;
+      color: var(--ink);
+      background: var(--paper);
+      border-radius: 10px;
+      transform: translateY(-160%);
+      transition: transform .2s ease;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .scroll-progress {
+      position: fixed;
+      inset: 0 0 auto;
+      height: 3px;
+      z-index: 220;
+      background: rgba(255, 255, 255, .04);
+    }
+
+    .scroll-progress span {
+      display: block;
+      width: calc(var(--page-scroll) * 100%);
+      height: 100%;
+      background: var(--rose);
+      box-shadow: 0 0 18px rgba(212, 92, 117, .5);
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 200;
+      height: 74px;
+      transition: background .25s ease, border-color .25s ease, backdrop-filter .25s ease;
+      border-bottom: 1px solid transparent;
+    }
+
+    .site-header.is-scrolled,
+    .site-header.menu-open {
+      background: rgba(13, 16, 24, .82);
+      border-color: var(--line);
+      backdrop-filter: blur(20px);
+    }
+
+    .nav-wrap {
+      width: min(1180px, calc(100% - 2rem));
+      height: 100%;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: .75rem;
+      color: var(--paper);
+      text-decoration: none;
+      font-weight: 760;
+      letter-spacing: -.02em;
+    }
+
+    .brand-mark {
+      width: 39px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .04);
+      box-shadow: inset 0 1px rgba(255, 255, 255, .08);
+    }
+
+    .brand-mark svg { width: 27px; height: 27px; }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font: 500 .64rem/1.1 ui-monospace, "Cascadia Code", monospace;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+    }
+
+    .nav-links a {
+      position: relative;
+      color: var(--muted);
+      font-size: .91rem;
+      text-decoration: none;
+      transition: color .2s ease;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 100%;
+      bottom: -.45rem;
+      height: 1px;
+      background: var(--rose);
+      transition: right .25s ease;
+    }
+
+    .nav-links a:hover { color: var(--paper); }
+    .nav-links a:hover::after { right: 0; }
+
+    .nav-mature {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      min-height: 38px;
+      padding: .35rem .75rem;
+      color: var(--paper);
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .nav-mature .switch {
+      position: relative;
+      width: 30px;
+      height: 17px;
+      background: var(--slate-2);
+      border-radius: 999px;
+      transition: background .2s ease;
+    }
+
+    .nav-mature .switch::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 11px;
+      height: 11px;
+      background: var(--paper);
+      border-radius: 50%;
+      transition: transform .2s ease;
+    }
+
+    .nav-mature[aria-pressed="true"] .switch { background: var(--rose); }
+    .nav-mature[aria-pressed="true"] .switch::after { transform: translateX(13px); }
+
+    .menu-button {
+      display: none;
+      width: 42px;
+      height: 42px;
+      color: var(--paper);
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .menu-button span,
+    .menu-button span::before,
+    .menu-button span::after {
+      display: block;
+      width: 18px;
+      height: 1px;
+      margin: auto;
+      background: currentColor;
+      content: "";
+      transition: transform .2s ease;
+    }
+
+    .menu-button span::before { transform: translateY(-6px); }
+    .menu-button span::after { transform: translateY(5px); }
+
+    .menu-button[aria-expanded="true"] span { background: transparent; }
+    .menu-button[aria-expanded="true"] span::before { transform: rotate(45deg); }
+    .menu-button[aria-expanded="true"] span::after { transform: translateY(-1px) rotate(-45deg); }
+
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      align-items: center;
+      overflow: hidden;
+      isolation: isolate;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 28%;
+      z-index: -1;
+      background: linear-gradient(transparent, var(--ink));
+    }
+
+    .hero-grid {
+      width: min(1180px, calc(100% - 2rem));
+      margin: auto;
+      padding: 8.5rem 0 5rem;
+      display: grid;
+      grid-template-columns: minmax(0, .88fr) minmax(420px, 1.12fr);
+      align-items: center;
+      gap: clamp(2rem, 6vw, 7rem);
+    }
+
+    .hero-copy { position: relative; z-index: 4; }
+
+    .eyebrow {
+      margin: 0 0 1.35rem;
+      color: var(--rose-soft);
+      font: 650 .75rem/1.2 ui-monospace, "Cascadia Code", monospace;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 12ch;
+      margin-bottom: 1.5rem;
+      font-size: clamp(3.6rem, 7vw, 7.3rem);
+      line-height: .9;
+      letter-spacing: -.07em;
+      font-weight: 790;
+    }
+
+    h1 em {
+      color: var(--rose-soft);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .hero-lead {
+      max-width: 34rem;
+      margin-bottom: 2rem;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.8vw, 1.18rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .primary-cta {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: .8rem 1.25rem;
+      overflow: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--paper);
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 720;
+      transition: color .25s ease, transform .2s ease;
+      isolation: isolate;
+    }
+
+    .primary-cta::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: var(--rose);
+      transform: translateX(-103%);
+      transition: transform .3s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .primary-cta:hover { color: white; }
+    .primary-cta:hover::before { transform: translateX(0); }
+    .primary-cta:active { transform: translateY(1px); }
+
+    .text-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: .7rem;
+      padding: .75rem .2rem .55rem;
+      color: var(--paper);
+      border-bottom: 1px solid var(--line-strong);
+      text-decoration: none;
+      transition: border-color .2s ease, gap .2s ease;
+    }
+
+    .text-cta:hover { gap: 1rem; border-color: var(--rose); }
+
+    .hero-art {
+      position: relative;
+      height: min(72vh, 650px);
+      min-height: 500px;
+      perspective: 1200px;
+      transform: translate3d(calc(var(--pointer-x) * 8px), calc(var(--pointer-y) * 8px), 0);
+      transition: transform .16s linear;
+    }
+
+    .archive-stage {
+      position: absolute;
+      inset: 4% 2%;
+      display: grid;
+      place-items: center;
+      transform-style: preserve-3d;
+      transform: rotateX(calc(5deg - var(--hero-progress) * 8deg)) rotateY(calc(-9deg + var(--hero-progress) * 22deg));
+    }
+
+    .orbit {
+      position: absolute;
+      border: 1px solid rgba(238, 240, 245, .14);
+      border-radius: 50%;
+      transform-style: preserve-3d;
+    }
+
+    .orbit-a {
+      width: 88%;
+      aspect-ratio: 1;
+      transform: rotateX(67deg) rotateZ(calc(10deg + var(--hero-progress) * 80deg));
+    }
+
+    .orbit-b {
+      width: 62%;
+      aspect-ratio: 1;
+      border-color: rgba(212, 92, 117, .24);
+      transform: rotateY(69deg) rotateZ(calc(-17deg - var(--hero-progress) * 62deg));
+    }
+
+    .orbit::before {
+      content: "";
+      position: absolute;
+      width: 9px;
+      aspect-ratio: 1;
+      top: 12%;
+      left: 16%;
+      border-radius: 50%;
+      background: var(--rose);
+      box-shadow: 0 0 24px rgba(212, 92, 117, .8);
+    }
+
+    .archive-core {
+      position: relative;
+      width: min(64%, 360px);
+      aspect-ratio: .78;
+      transform-style: preserve-3d;
+      transform: translateZ(50px) translateY(calc(var(--hero-progress) * -22px));
+    }
+
+    .glass-case {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border: 1px solid rgba(238, 240, 245, .31);
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, .13), transparent 33%),
+        linear-gradient(160deg, rgba(212, 92, 117, .06), rgba(13, 16, 24, .72));
+      box-shadow: var(--shadow), inset 0 1px rgba(255, 255, 255, .2);
+      backdrop-filter: blur(12px);
+    }
+
+    .glass-case::before {
+      content: "";
+      position: absolute;
+      width: 130%;
+      height: 34%;
+      left: -20%;
+      top: 34%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .09), transparent);
+      transform: rotate(-24deg) translateY(calc(var(--hero-progress) * 100px));
+    }
+
+    .case-spine {
+      position: absolute;
+      inset: 7% auto 7% 7%;
+      width: 4px;
+      border-radius: 99px;
+      background: linear-gradient(var(--rose), transparent);
+      opacity: .8;
+    }
+
+    .case-label {
+      position: absolute;
+      top: 8%;
+      right: 9%;
+      color: var(--muted);
+      font: 600 .65rem/1.4 ui-monospace, "Cascadia Code", monospace;
+      letter-spacing: .14em;
+      writing-mode: vertical-rl;
+    }
+
+    .jelly-seal {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 120px;
+      height: 120px;
+      transform: translate(-50%, -50%) rotate(calc(var(--hero-progress) * 18deg));
+      filter: drop-shadow(0 16px 28px rgba(0, 0, 0, .35));
+    }
+
+    .jelly-seal svg { width: 100%; height: 100%; }
+
+    .script-sheet {
+      position: absolute;
+      width: 56%;
+      aspect-ratio: .72;
+      left: 22%;
+      top: 14%;
+      border: 1px solid var(--line-strong);
+      border-radius: 13px;
+      background: rgba(29, 35, 49, .92);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, .34);
+      transform-origin: bottom center;
+    }
+
+    .script-sheet::before,
+    .script-sheet::after {
+      content: "";
+      position: absolute;
+      left: 14%;
+      right: 14%;
+      border-radius: 5px;
+      background: repeating-linear-gradient(to bottom, rgba(238, 240, 245, .5) 0 2px, transparent 2px 13px);
+    }
+
+    .script-sheet::before { top: 16%; height: 34%; }
+    .script-sheet::after { top: 57%; height: 20%; background-color: rgba(212, 92, 117, .1); }
+
+    .sheet-a { transform: translateZ(-26px) rotate(-10deg) translateX(calc(var(--hero-progress) * -48px)); }
+    .sheet-b { transform: translateZ(-12px) rotate(7deg) translateX(calc(var(--hero-progress) * 52px)); }
+    .sheet-c { transform: translateZ(8px) rotate(calc(-2deg + var(--hero-progress) * 5deg)); }
+
+    .float-tag {
+      position: absolute;
+      padding: .5rem .7rem;
+      color: var(--muted);
+      background: rgba(13, 16, 24, .7);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      backdrop-filter: blur(8px);
+      font: 550 .65rem/1 ui-monospace, "Cascadia Code", monospace;
+      letter-spacing: .1em;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .24);
+    }
+
+    .tag-jp { top: 18%; left: 1%; transform: translateY(calc(var(--hero-progress) * -30px)); }
+    .tag-id { right: 0; bottom: 18%; color: var(--paper); border-color: rgba(212, 92, 117, .4); transform: translateY(calc(var(--hero-progress) * 28px)); }
+    .tag-engine { left: 10%; bottom: 4%; transform: translateX(calc(var(--hero-progress) * 20px)); }
+
+    .side-rail {
+      position: absolute;
+      right: 1.2rem;
+      bottom: 2rem;
+      z-index: 5;
+      color: rgba(238, 240, 245, .43);
+      font: 500 .65rem/1 ui-monospace, "Cascadia Code", monospace;
+      letter-spacing: .16em;
+      writing-mode: vertical-rl;
+    }
+
+    .side-rail::before {
+      content: "";
+      display: inline-block;
+      width: 1px;
+      height: 54px;
+      margin-bottom: .75rem;
+      background: var(--rose);
+    }
+
+    main { overflow: clip; }
+
+    .section {
+      position: relative;
+      width: min(1180px, calc(100% - 2rem));
+      margin: auto;
+      padding: clamp(5rem, 10vw, 9rem) 0;
+    }
+
+    .section-wide {
+      width: min(1320px, calc(100% - 2rem));
+    }
+
+    .section-head {
+      max-width: 770px;
+      margin-bottom: 3.25rem;
+    }
+
+    .section-kicker {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      margin-bottom: 1.15rem;
+      color: var(--rose-soft);
+      font: 650 .74rem/1.2 ui-monospace, "Cascadia Code", monospace;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .section-kicker::before {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: var(--rose);
+    }
+
+    h2 {
+      margin-bottom: 1.25rem;
+      font-size: clamp(2.35rem, 5.2vw, 5rem);
+      line-height: .98;
+      letter-spacing: -.055em;
+    }
+
+    .section-head p {
+      max-width: 60ch;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .75rem 0;
+      margin-bottom: 2rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .filters { display: flex; flex-wrap: wrap; gap: .4rem; }
+
+    .filter-button {
+      padding: .55rem .85rem;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: color .2s ease, background .2s ease, border-color .2s ease;
+    }
+
+    .filter-button:hover { color: var(--paper); }
+
+    .filter-button[aria-pressed="true"] {
+      color: var(--paper);
+      background: rgba(255, 255, 255, .055);
+      border-color: var(--line);
+    }
+
+    .filter-note {
+      color: var(--muted);
+      font: 500 .71rem/1.4 ui-monospace, "Cascadia Code", monospace;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+      gap: 1.25rem;
+    }
+
+    .project-card {
+      position: relative;
+      min-height: 560px;
+      display: grid;
+      grid-template-rows: minmax(260px, 1fr) auto;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--ink-2);
+      box-shadow: 0 20px 70px rgba(0, 0, 0, .2);
+      transition: border-color .25s ease, transform .25s ease;
+    }
+
+    .project-card:nth-child(2) { min-height: 500px; margin-top: 4rem; }
+    .project-card:hover { border-color: rgba(212, 92, 117, .48); transform: translateY(-4px); }
+    .project-card.is-hidden { display: none; }
+
+    .project-cover {
+      position: relative;
+      min-height: 300px;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+      background: #171c28;
+    }
+
+    .project-cover svg {
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+      display: block;
+      transition: filter .35s ease, transform .5s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .project-card:hover .project-cover svg { transform: scale(1.025); }
+
+    .project-card[data-mature="true"] .project-cover svg {
+      filter: blur(18px) saturate(.55);
+      transform: scale(1.08);
+    }
+
+    body.mature-on .project-card[data-mature="true"] .project-cover svg {
+      filter: none;
+      transform: scale(1);
+    }
+
+    .mature-cover {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: grid;
+      place-items: center;
+      background: rgba(13, 16, 24, .28);
+      transition: opacity .25s ease, visibility .25s ease;
+    }
+
+    .mature-cover span {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      padding: .75rem 1rem;
+      color: var(--paper);
+      background: rgba(13, 16, 24, .8);
+      border: 1px solid rgba(238, 240, 245, .28);
+      border-radius: 999px;
+      backdrop-filter: blur(12px);
+      font-size: .86rem;
+    }
+
+    body.mature-on .mature-cover { opacity: 0; visibility: hidden; }
+
+    .project-body { padding: 1.5rem; }
+
+    .project-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .6rem 1rem;
+      margin-bottom: 1.1rem;
+      color: var(--muted);
+      font: 550 .7rem/1.4 ui-monospace, "Cascadia Code", monospace;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      color: var(--rose-soft);
+    }
+
+    .status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--rose);
+      box-shadow: 0 0 0 4px rgba(212, 92, 117, .12);
+    }
+
+    .project-card h3 {
+      margin-bottom: .7rem;
+      font-size: clamp(1.55rem, 3vw, 2.3rem);
+      line-height: 1.08;
+      letter-spacing: -.035em;
+    }
+
+    .project-card p { color: var(--muted); }
+
+    .project-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.4rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .detail-button {
+      padding: .55rem 0;
+      color: var(--paper);
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid var(--rose);
+      cursor: pointer;
+    }
+
+    .download-button {
+      padding: .62rem .8rem;
+      color: #858c9a;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      cursor: not-allowed;
+    }
+
+    .empty-state {
+      display: none;
+      grid-column: 1 / -1;
+      min-height: 280px;
+      padding: 3rem;
+      place-items: center;
+      text-align: center;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .02);
+    }
+
+    .empty-state.is-visible { display: grid; }
+    .empty-state strong { display: block; margin-bottom: .5rem; font-size: 1.3rem; }
+    .empty-state p { margin: 0; color: var(--muted); }
+
+    .spotlight-shell {
+      width: min(1320px, calc(100% - 2rem));
+      margin: clamp(2rem, 4vw, 5rem) auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background:
+        linear-gradient(110deg, rgba(13, 16, 24, .14), rgba(13, 16, 24, .92) 72%),
+        radial-gradient(circle at 20% 28%, rgba(212, 92, 117, .34), transparent 18rem),
+        #212839;
+    }
+
+    .spotlight {
+      min-height: 680px;
+      padding: clamp(2rem, 6vw, 6rem);
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+      align-items: end;
+      gap: 3rem;
+      background-image:
+        linear-gradient(rgba(238, 240, 245, .055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(238, 240, 245, .055) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    .spotlight-copy h2 { max-width: 10ch; }
+    .spotlight-copy p { max-width: 55ch; color: var(--muted); }
+
+    .engine-table { border-top: 1px solid var(--line-strong); }
+
+    .engine-row {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--line);
+      font-size: .9rem;
+    }
+
+    .engine-row span:first-child {
+      color: var(--muted);
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      font-size: .74rem;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+    }
+
+    .install-layout {
+      display: grid;
+      grid-template-columns: minmax(230px, .55fr) minmax(0, 1.45fr);
+      gap: clamp(2rem, 8vw, 8rem);
+      align-items: start;
+    }
+
+    .install-aside {
+      position: sticky;
+      top: 110px;
+      padding-left: 1.2rem;
+      border-left: 3px solid var(--rose);
+    }
+
+    .install-aside p { color: var(--muted); }
+
+    .timeline { border-top: 1px solid var(--line-strong); }
+
+    .timeline-step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 1rem;
+      padding: 2rem 0 2.2rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .timeline-step .number {
+      color: var(--rose-soft);
+      font: 500 1.9rem/1 ui-monospace, "Cascadia Code", monospace;
+      letter-spacing: -.08em;
+    }
+
+    .timeline-step h3 { margin-bottom: .5rem; font-size: 1.35rem; }
+    .timeline-step p { max-width: 58ch; margin: 0; color: var(--muted); }
+
+    .mature-policy {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--ink-2);
+    }
+
+    .policy-art {
+      position: relative;
+      min-height: 520px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(212, 92, 117, .25), transparent 22rem),
+        repeating-linear-gradient(135deg, rgba(238, 240, 245, .04) 0 1px, transparent 1px 18px),
+        var(--slate);
+    }
+
+    .policy-art::before {
+      content: "18+";
+      color: transparent;
+      font-size: clamp(8rem, 22vw, 18rem);
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -.12em;
+      -webkit-text-stroke: 1px rgba(238, 240, 245, .18);
+      transform: rotate(-8deg);
+    }
+
+    .policy-art span {
+      position: absolute;
+      padding: .7rem 1rem;
+      background: rgba(13, 16, 24, .78);
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+      font: 600 .72rem/1 ui-monospace, "Cascadia Code", monospace;
+      letter-spacing: .11em;
+    }
+
+    .policy-copy {
+      padding: clamp(2.3rem, 6vw, 5rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .policy-copy h2 { font-size: clamp(2.4rem, 4.6vw, 4.5rem); }
+    .policy-copy > p { color: var(--muted); }
+
+    .policy-list {
+      margin: 1.4rem 0 2rem;
+      padding: 0;
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .policy-list li {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: .75rem;
+      padding: .9rem 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .policy-list b { color: var(--rose-soft); }
+
+    .policy-toggle {
+      align-self: flex-start;
+      padding: .75rem 1rem;
+      color: var(--paper);
+      background: transparent;
+      border: 1px solid var(--rose);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    .policy-toggle:hover { color: var(--ink); background: var(--rose-soft); }
+
+    .principles {
+      border-top: 1px solid var(--line-strong);
+    }
+
+    .principle {
+      display: grid;
+      grid-template-columns: .5fr 1.5fr;
+      gap: 2rem;
+      padding: 1.8rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .principle h3 { margin: 0; font-size: 1.1rem; }
+    .principle p { max-width: 60ch; margin: 0; color: var(--muted); }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, .7fr) minmax(0, 1.3fr);
+      gap: clamp(2rem, 8vw, 8rem);
+    }
+
+    .faq-intro h2 { position: sticky; top: 110px; }
+
+    .faq-list { border-top: 1px solid var(--line-strong); }
+
+    details { border-bottom: 1px solid var(--line); }
+
+    summary {
+      position: relative;
+      padding: 1.3rem 3rem 1.3rem 0;
+      cursor: pointer;
+      list-style: none;
+      font-weight: 650;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    summary::after {
+      content: "+";
+      position: absolute;
+      right: .4rem;
+      top: 50%;
+      color: var(--rose-soft);
+      font: 400 1.4rem/1 ui-monospace, monospace;
+      transform: translateY(-50%);
+      transition: transform .2s ease;
+    }
+
+    details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+    details p { max-width: 62ch; padding: 0 2rem 1.35rem 0; color: var(--muted); }
+
+    .site-footer {
+      padding: 4rem 0 2rem;
+      border-top: 1px solid var(--line);
+      background: #0a0d14;
+    }
+
+    .footer-wrap {
+      width: min(1180px, calc(100% - 2rem));
+      margin: auto;
+    }
+
+    .footer-main {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+      padding-bottom: 3rem;
+    }
+
+    .footer-title {
+      max-width: 9ch;
+      margin: 0;
+      font-size: clamp(2.6rem, 6vw, 5.4rem);
+      line-height: .92;
+      letter-spacing: -.06em;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 1rem 1.5rem;
+    }
+
+    .footer-links a { color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--paper); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+      color: #858c9a;
+      font-size: .78rem;
+    }
+
+    [data-reveal] {
+      transform: translateY(20px);
+      transition: transform .7s cubic-bezier(.2, .75, .2, 1);
+    }
+
+    [data-reveal].is-visible { transform: translateY(0); }
+
+    dialog {
+      width: min(560px, calc(100% - 2rem));
+      max-height: calc(100svh - 2rem);
+      padding: 0;
+      color: var(--paper);
+      background: var(--ink-2);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      box-shadow: 0 34px 120px rgba(0, 0, 0, .64);
+    }
+
+    dialog::backdrop {
+      background: rgba(5, 7, 11, .78);
+      backdrop-filter: blur(8px);
+    }
+
+    .dialog-inner { padding: clamp(1.5rem, 5vw, 2.5rem); }
+
+    .dialog-icon {
+      width: 52px;
+      height: 52px;
+      margin-bottom: 1.25rem;
+      display: grid;
+      place-items: center;
+      color: var(--rose-soft);
+      background: rgba(212, 92, 117, .11);
+      border: 1px solid rgba(212, 92, 117, .35);
+      border-radius: 14px;
+      font-weight: 800;
+    }
+
+    dialog h2 { margin-bottom: .85rem; font-size: clamp(1.8rem, 5vw, 2.6rem); }
+    dialog p { color: var(--muted); }
+
+    .dialog-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      margin-top: 1.6rem;
+    }
+
+    .dialog-confirm,
+    .dialog-cancel {
+      min-height: 45px;
+      padding: .65rem 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .dialog-confirm { color: var(--ink); background: var(--paper); border: 1px solid var(--paper); font-weight: 700; }
+    .dialog-confirm:hover { background: var(--rose-soft); border-color: var(--rose-soft); }
+    .dialog-cancel { color: var(--paper); background: transparent; border: 1px solid var(--line-strong); }
+
+    .detail-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--line);
+    }
+
+    .detail-meta div { padding: .9rem; background: var(--ink-2); }
+    .detail-meta small { display: block; color: var(--muted); font: 500 .67rem/1.3 ui-monospace, monospace; text-transform: uppercase; letter-spacing: .09em; }
+
+    .noscript {
+      padding: .8rem 1rem;
+      color: var(--ink);
+      background: var(--rose-soft);
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .menu-button { display: block; }
+
+      .nav-links {
+        position: absolute;
+        inset: 74px 0 auto;
+        display: grid;
+        padding: 1rem;
+        background: rgba(13, 16, 24, .96);
+        border-bottom: 1px solid var(--line);
+        transform: translateY(-130%);
+        visibility: hidden;
+        transition: transform .25s ease, visibility .25s ease;
+      }
+
+      .site-header.menu-open .nav-links { transform: translateY(0); visibility: visible; }
+      .nav-links a { padding: .75rem 0; }
+      .nav-mature { justify-self: start; }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+        padding-top: 7rem;
+        gap: 1rem;
+      }
+
+      h1 { font-size: clamp(3.3rem, 14vw, 6.4rem); }
+      .hero-art { height: 54vh; min-height: 430px; }
+      .side-rail { display: none; }
+
+      .project-grid { grid-template-columns: 1fr; }
+      .project-card:nth-child(2) { margin-top: 0; }
+      .spotlight { grid-template-columns: 1fr; min-height: 620px; }
+      .install-layout { grid-template-columns: 1fr; }
+      .install-aside { position: static; }
+      .mature-policy { grid-template-columns: 1fr; }
+      .policy-art { min-height: 320px; }
+      .faq-grid { grid-template-columns: 1fr; }
+      .faq-intro h2 { position: static; }
+    }
+
+    @media (max-width: 620px) {
+      .nav-wrap { width: min(100% - 1.25rem, 1180px); }
+      .brand-copy { display: none; }
+      .section, .section-wide, .spotlight-shell { width: min(100% - 1.25rem, 1180px); }
+      .hero-grid { width: min(100% - 1.25rem, 1180px); }
+      h1 { font-size: clamp(3.1rem, 17vw, 5rem); }
+      .hero-actions { align-items: stretch; flex-direction: column; }
+      .primary-cta, .text-cta { justify-content: center; }
+      .hero-art { min-height: 370px; height: 47vh; }
+      .archive-core { width: min(68%, 270px); }
+      .filter-bar { align-items: flex-start; flex-direction: column; }
+      .filter-note { display: none; }
+      .project-card { min-height: 520px; }
+      .spotlight { padding: 2rem 1.25rem; }
+      .engine-row { grid-template-columns: 1fr; gap: .25rem; }
+      .timeline-step { grid-template-columns: 48px 1fr; }
+      .policy-copy { padding: 2rem 1.25rem; }
+      .principle { grid-template-columns: 1fr; gap: .5rem; }
+      .footer-main { align-items: flex-start; flex-direction: column; }
+      .footer-links { justify-content: flex-start; }
+      .footer-bottom { flex-direction: column; }
+      .detail-meta { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+      .archive-stage, .hero-art, .script-sheet, .orbit { transform: none !important; }
+      [data-reveal] { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">Lewati ke konten</a>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+  <header class="site-header" id="site-header">
+    <div class="nav-wrap">
+      <a class="brand" href="#top" aria-label="KurageTL, kembali ke atas">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 15.8C6 9.84 10.48 5 16 5s10 4.84 10 10.8H6Z" fill="#D45C75"/>
+            <path d="M8 18.5c1.4 0 1.4 3 2.8 3s1.4-3 2.8-3 1.4 5 2.8 5 1.4-5 2.8-5 1.4 3 2.8 3 1.4-3 2.8-3" stroke="#EEF0F5" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="brand-copy">KurageTL<small>JP → ID Localization</small></span>
+      </a>
+
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Buka menu"><span></span></button>
+
+      <nav class="nav-links" id="main-nav" aria-label="Navigasi utama">
+        <a href="#proyek">Proyek</a>
+        <a href="#cara-pasang">Cara Pasang</a>
+        <a href="#prinsip">Prinsip Rilis</a>
+        <button class="nav-mature mature-trigger" type="button" aria-pressed="false">
+          <span class="switch" aria-hidden="true"></span>
+          <span>Konten 18+</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-grid">
+        <div class="hero-copy" data-reveal>
+          <p class="eyebrow">Patch Indonesia untuk VN & RPG Maker</p>
+          <h1 id="hero-title">Cerita Jepang, kini terasa <em>lebih dekat.</em></h1>
+          <p class="hero-lead">KurageTL menerjemahkan teks, menyunting UI, dan menyesuaikan engine agar game nyaman dimainkan dalam bahasa Indonesia.</p>
+          <div class="hero-actions">
+            <a class="primary-cta" href="#proyek">Lihat Proyek</a>
+            <a class="text-cta" href="#cara-pasang">Cara Pasang <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+          <div class="archive-stage">
+            <div class="orbit orbit-a"></div>
+            <div class="orbit orbit-b"></div>
+            <div class="archive-core">
+              <div class="script-sheet sheet-a"></div>
+              <div class="script-sheet sheet-b"></div>
+              <div class="script-sheet sheet-c"></div>
+              <div class="glass-case">
+                <span class="case-spine"></span>
+                <span class="case-label">LOCALIZATION ARCHIVE</span>
+                <span class="jelly-seal">
+                  <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="60" cy="60" r="58" fill="#141925" stroke="#EEF0F5" stroke-opacity=".18"/>
+                    <path d="M27 59c0-20 14.8-36 33-36s33 16 33 36H27Z" fill="#D45C75" fill-opacity=".92"/>
+                    <path d="M33 68c6 0 6 15 12 15s6-15 12-15 6 25 12 25 6-25 12-25 6 15 12 15" stroke="#EEF0F5" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M45 51h2M73 51h2" stroke="#141925" stroke-width="5" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+            <span class="float-tag tag-jp">SOURCE / 日本語</span>
+            <span class="float-tag tag-id">TARGET / INDONESIA</span>
+            <span class="float-tag tag-engine">TEXT · UI · ENGINE</span>
+          </div>
+        </div>
+      </div>
+      <div class="side-rail" aria-hidden="true">翻訳アーカイブ</div>
+    </section>
+
+    <section class="section section-wide" id="proyek" aria-labelledby="projects-title">
+      <div class="section-head" data-reveal>
+        <div class="section-kicker">Arsip Proyek</div>
+        <h2 id="projects-title">Pilih cerita yang ingin kau mainkan.</h2>
+        <p>Periksa status, engine, dan versi game sebelum memasang. Tombol unduh akan aktif setelah patch dinyatakan siap.</p>
+      </div>
+
+      <div class="filter-bar" data-reveal>
+        <div class="filters" role="group" aria-label="Saring proyek">
+          <button class="filter-button" type="button" data-filter="all" aria-pressed="true">Semua</button>
+          <button class="filter-button" type="button" data-filter="vn" aria-pressed="false">Visual Novel</button>
+          <button class="filter-button" type="button" data-filter="rpgm" aria-pressed="false">RPG Maker</button>
+        </div>
+        <div class="filter-note" id="filter-status" aria-live="polite">2 proyek ditampilkan</div>
+      </div>
+
+      <div class="project-grid">
+        <article class="project-card" data-type="vn" data-mature="true" data-project="subahibi" data-reveal>
+          <div class="project-cover">
+            <svg viewBox="0 0 800 520" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sampul abstrak Subarashiki Hibi yang disensor">
+              <defs>
+                <radialGradient id="g1" cx="0" cy="0" r="1" gradientTransform="translate(575 126) rotate(127) scale(430 545)" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#D45C75" stop-opacity=".68"/><stop offset=".55" stop-color="#263047"/><stop offset="1" stop-color="#111620"/>
+                </radialGradient>
+                <filter id="blur1"><feGaussianBlur stdDeviation="18"/></filter>
+              </defs>
+              <rect width="800" height="520" fill="url(#g1)"/>
+              <circle cx="596" cy="105" r="126" fill="#EEF0F5" fill-opacity=".12" filter="url(#blur1)"/>
+              <path d="M79 461C175 321 256 297 357 173S548 43 735 51" stroke="#EEF0F5" stroke-opacity=".13" stroke-width="2"/>
+              <path d="M-55 434C110 366 176 400 287 288S433 75 633 33" stroke="#D45C75" stroke-opacity=".36" stroke-width="5"/>
+              <g fill="#EEF0F5">
+                <text x="65" y="105" font-size="27" font-family="serif" opacity=".58">素晴らしき日々</text>
+                <text x="64" y="161" font-size="61" font-family="sans-serif" font-weight="700">SUBARASHIKI</text>
+                <text x="64" y="218" font-size="61" font-family="sans-serif" font-weight="700">HIBI</text>
+              </g>
+              <text x="67" y="454" fill="#EEF0F5" opacity=".55" font-size="18" font-family="monospace">BGI / ETHORNELL · WINDOWS</text>
+            </svg>
+            <div class="mature-cover"><span><b>18+</b> Sampul disensor</span></div>
+          </div>
+          <div class="project-body">
+            <div class="project-meta"><span class="status">Sedang dikerjakan</span><span>Visual Novel</span><span>BGI</span></div>
+            <h3>Subarashiki Hibi</h3>
+            <p>Terjemahan Indonesia, penyuntingan UI, dan penyesuaian engine untuk edisi Windows.</p>
+            <div class="project-actions">
+              <button class="detail-button" type="button">Lihat Detail</button>
+              <button class="download-button" type="button" disabled>Belum tersedia</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card" data-type="vn" data-mature="true" data-project="kojyo" data-reveal>
+          <div class="project-cover">
+            <svg viewBox="0 0 700 520" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sampul abstrak Teori Hampa di Kastil yang Terisolasi yang disensor">
+              <defs>
+                <linearGradient id="g2" x1="79" y1="38" x2="646" y2="510" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#2D3547"/><stop offset=".58" stop-color="#151A26"/><stop offset="1" stop-color="#D45C75" stop-opacity=".54"/>
+                </linearGradient>
+              </defs>
+              <rect width="700" height="520" fill="url(#g2)"/>
+              <path d="M350 66 494 180v245H206V180L350 66Z" fill="#0D1018" fill-opacity=".47" stroke="#EEF0F5" stroke-opacity=".18"/>
+              <path d="M350 116v308M252 224h196M252 281h196M252 338h196" stroke="#EEF0F5" stroke-opacity=".09"/>
+              <circle cx="350" cy="237" r="48" fill="#D45C75" fill-opacity=".72"/>
+              <text x="42" y="67" fill="#EEF0F5" opacity=".55" font-size="23" font-family="serif">孤城の空論</text>
+              <text x="42" y="390" fill="#EEF0F5" font-size="36" font-family="sans-serif" font-weight="700">TEORI HAMPA</text>
+              <text x="42" y="433" fill="#EEF0F5" font-size="36" font-family="sans-serif" font-weight="700">DI KASTIL TERISOLASI</text>
+              <text x="45" y="480" fill="#EEF0F5" opacity=".54" font-size="17" font-family="monospace">TYRANOSCRIPT · WINDOWS</text>
+            </svg>
+            <div class="mature-cover"><span><b>18+</b> Sampul disensor</span></div>
+          </div>
+          <div class="project-body">
+            <div class="project-meta"><span class="status">Sedang dikerjakan</span><span>Visual Novel</span><span>TyranoScript</span></div>
+            <h3>Teori Hampa di Kastil yang Terisolasi</h3>
+            <p>Lokalisasi naskah dan antarmuka dengan gaya dialog natural serta narasi yang rapi.</p>
+            <div class="project-actions">
+              <button class="detail-button" type="button">Lihat Detail</button>
+              <button class="download-button" type="button" disabled>Belum tersedia</button>
+            </div>
+          </div>
+        </article>
+
+        <div class="empty-state" id="empty-state">
+          <div><strong>Belum ada proyek RPG Maker yang diumumkan.</strong><p>Proyek baru akan muncul di sini setelah informasinya siap dibagikan.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="spotlight-shell" aria-labelledby="spotlight-title" data-reveal>
+      <div class="spotlight">
+        <div class="spotlight-copy">
+          <div class="section-kicker">Fokus Saat Ini</div>
+          <h2 id="spotlight-title">Lebih dari sekadar mengganti teks.</h2>
+          <p>Lokalisasi juga menyentuh tata letak nama, ukuran font, word wrap, warna teks, log, dan elemen UI agar hasil akhirnya menyatu dengan game.</p>
+        </div>
+        <div class="engine-table" aria-label="Ruang lingkup pekerjaan Subarashiki Hibi">
+          <div class="engine-row"><span>Proyek</span><strong>Subarashiki Hibi</strong></div>
+          <div class="engine-row"><span>Engine</span><strong>BGI / Ethornell</strong></div>
+          <div class="engine-row"><span>Platform</span><strong>Windows</strong></div>
+          <div class="engine-row"><span>Ruang lingkup</span><strong>Teks, UI, engine</strong></div>
+          <div class="engine-row"><span>Status</span><strong>Dalam pengerjaan</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cara-pasang" aria-labelledby="install-title">
+      <div class="install-layout">
+        <aside class="install-aside" data-reveal>
+          <div class="section-kicker">Panduan Umum</div>
+          <h2 id="install-title">Pasang dengan aman.</h2>
+          <p>Instruksi tiap game dapat berbeda. README di dalam patch tetap menjadi acuan utama.</p>
+        </aside>
+        <div class="timeline">
+          <article class="timeline-step" data-reveal>
+            <span class="number">01</span>
+            <div><h3>Periksa versi game</h3><p>Cocokkan edisi, platform, dan nomor versi game dengan keterangan pada halaman proyek.</p></div>
+          </article>
+          <article class="timeline-step" data-reveal>
+            <span class="number">02</span>
+            <div><h3>Cadangkan file asli</h3><p>Simpan salinan folder game atau file yang akan diganti agar instalasi dapat dibatalkan dengan mudah.</p></div>
+          </article>
+          <article class="timeline-step" data-reveal>
+            <span class="number">03</span>
+            <div><h3>Ikuti README patch</h3><p>Ekstrak patch, jalankan installer bila tersedia, lalu uji dari save baru jika catatan rilis memintanya.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-wide" id="konten-dewasa" aria-labelledby="mature-title">
+      <div class="mature-policy" data-reveal>
+        <div class="policy-art" aria-hidden="true"><span>PUBLIC COVER / SAFE</span></div>
+        <div class="policy-copy">
+          <div class="section-kicker">Kebijakan Konten</div>
+          <h2 id="mature-title">Proyek dewasa, halaman publik tetap aman.</h2>
+          <p>Label 18+ dipakai untuk memberi konteks. Situs ini tidak menampilkan adegan seksual eksplisit dan tidak menyediakan game lengkap.</p>
+          <ul class="policy-list">
+            <li><b>✓</b><span>Sampul publik memakai versi SFW atau sudah disensor.</span></li>
+            <li><b>✓</b><span>Kartu proyek dewasa diburamkan sampai pengunjung mengonfirmasi usia.</span></li>
+            <li><b>✓</b><span>Tautan pembelian resmi dipisahkan dari tombol unduh patch.</span></li>
+            <li><b>×</b><span>Tidak ada konten seksual yang melibatkan karakter di bawah umur atau tampak di bawah umur.</span></li>
+          </ul>
+          <button class="policy-toggle mature-trigger" type="button">Atur Tampilan 18+</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="prinsip" aria-labelledby="principles-title">
+      <div class="section-head" data-reveal>
+        <div class="section-kicker">Standar KurageTL</div>
+        <h2 id="principles-title">Patch yang jelas asal dan batasnya.</h2>
+        <p>Setiap rilis sebaiknya dapat diperiksa, dipasang, dan dipulihkan tanpa membingungkan pemain.</p>
+      </div>
+      <div class="principles">
+        <article class="principle" data-reveal><h3>Bahasa</h3><p>Sumber Jepang menjadi acuan utama. Bahasa Inggris dipakai untuk melihat konteks, bukan menggantikan makna asli.</p></article>
+        <article class="principle" data-reveal><h3>Kompatibilitas</h3><p>Nama edisi, versi executable, dan kebutuhan DLC dicantumkan sebelum tombol unduh.</p></article>
+        <article class="principle" data-reveal><h3>Keamanan</h3><p>Rilis menyertakan checksum, riwayat perubahan, dan panduan pencadangan bila file game harus diganti.</p></article>
+        <article class="principle" data-reveal><h3>Hak cipta</h3><p>Yang dibagikan adalah patch. Pengguna tetap harus memiliki salinan game yang sah.</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="faq-grid">
+        <div class="faq-intro" data-reveal><h2 id="faq-title">Pertanyaan umum.</h2></div>
+        <div class="faq-list" data-reveal>
+          <details>
+            <summary>Apakah patch KurageTL gratis?</summary>
+            <p>Halaman ini disiapkan untuk rilis patch gratis. Informasi final tetap mengikuti keterangan pada masing-masing proyek.</p>
+          </details>
+          <details>
+            <summary>Apakah file unduhan berisi game lengkap?</summary>
+            <p>Tidak. Unduhan hanya berisi patch atau installer. Game aslinya harus diperoleh melalui toko atau penerbit resmi.</p>
+          </details>
+          <details>
+            <summary>Mengapa tombol unduh belum aktif?</summary>
+            <p>Proyek yang masih dikerjakan belum mempunyai rilis publik. Tombol akan dihubungkan ke halaman rilis setelah file siap.</p>
+          </details>
+          <details>
+            <summary>Apakah kontrol 18+ merupakan verifikasi usia resmi?</summary>
+            <p>Tidak. Kontrol ini hanya lapisan tampilan dasar. Pemilik situs tetap wajib mengikuti aturan hosting dan hukum yang berlaku.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-wrap">
+      <div class="footer-main">
+        <p class="footer-title">Sampai jumpa di cerita berikutnya.</p>
+        <nav class="footer-links" aria-label="Navigasi footer">
+          <a href="#proyek">Proyek</a>
+          <a href="#cara-pasang">Cara Pasang</a>
+          <a href="#konten-dewasa">Konten 18+</a>
+          <a href="#top">Kembali ke atas</a>
+        </nav>
+      </div>
+      <div class="footer-bottom"><span>© <span id="year"></span> KurageTL</span><span>Patch Indonesia untuk Visual Novel & RPG Maker</span></div>
+    </div>
+  </footer>
+
+  <dialog id="age-dialog" aria-labelledby="age-title">
+    <div class="dialog-inner">
+      <div class="dialog-icon" aria-hidden="true">18+</div>
+      <h2 id="age-title">Konfirmasi usia</h2>
+      <p>Proyek bertanda 18+ ditujukan untuk orang dewasa. Sampul pada template ini tetap SFW dan tidak memuat adegan eksplisit.</p>
+      <div class="dialog-actions">
+        <button class="dialog-confirm" id="age-confirm" type="button">Saya berusia 18+</button>
+        <button class="dialog-cancel" id="age-cancel" type="button">Kembali</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="project-dialog" aria-labelledby="detail-title">
+    <div class="dialog-inner">
+      <div class="dialog-icon" aria-hidden="true">KTL</div>
+      <h2 id="detail-title">Detail Proyek</h2>
+      <p id="detail-description"></p>
+      <div class="detail-meta">
+        <div><small>Engine</small><strong id="detail-engine"></strong></div>
+        <div><small>Platform</small><strong id="detail-platform"></strong></div>
+        <div><small>Status</small><strong id="detail-status"></strong></div>
+        <div><small>Cakupan</small><strong id="detail-scope"></strong></div>
+      </div>
+      <p><small>Unduhan akan tersedia setelah versi rilis diumumkan.</small></p>
+      <div class="dialog-actions"><button class="dialog-cancel" id="detail-close" type="button">Tutup</button></div>
+    </div>
+  </dialog>
+
+  <noscript><div class="noscript">JavaScript dinonaktifkan. Katalog tetap dapat dibaca, tetapi filter dan kontrol 18+ tidak tersedia.</div></noscript>
+
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const header = document.getElementById('site-header');
+      const menuButton = document.querySelector('.menu-button');
+      const nav = document.getElementById('main-nav');
+      const ageDialog = document.getElementById('age-dialog');
+      const projectDialog = document.getElementById('project-dialog');
+      const matureTriggers = document.querySelectorAll('.mature-trigger');
+      const filterButtons = document.querySelectorAll('.filter-button');
+      const projectCards = [...document.querySelectorAll('.project-card')];
+      const emptyState = document.getElementById('empty-state');
+      const filterStatus = document.getElementById('filter-status');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let matureEnabled = false;
+      let pendingProject = null;
+
+      const projectData = {
+        subahibi: {
+          title: 'Subarashiki Hibi',
+          description: 'Terjemahan Indonesia sekaligus penyesuaian antarmuka dan engine untuk menjaga keterbacaan versi Windows.',
+          engine: 'BGI / Ethornell', platform: 'Windows', status: 'Dalam pengerjaan', scope: 'Teks, UI, engine'
+        },
+        kojyo: {
+          title: 'Teori Hampa di Kastil yang Terisolasi',
+          description: 'Lokalisasi naskah TyranoScript dengan dialog yang luwes, narasi rapi, serta elemen antarmuka berbahasa Indonesia.',
+          engine: 'TyranoScript', platform: 'Windows', status: 'Dalam pengerjaan', scope: 'Teks dan UI'
+        }
+      };
+
+      function updateScroll() {
+        const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+        const pageProgress = Math.min(Math.max(window.scrollY / max, 0), 1);
+        const heroProgress = Math.min(Math.max(window.scrollY / Math.max(window.innerHeight, 1), 0), 1);
+        root.style.setProperty('--page-scroll', pageProgress.toFixed(4));
+        root.style.setProperty('--hero-progress', heroProgress.toFixed(4));
+        header.classList.toggle('is-scrolled', window.scrollY > 18);
+      }
+
+      let scrollTicking = false;
+      window.addEventListener('scroll', () => {
+        if (!scrollTicking) {
+          requestAnimationFrame(() => { updateScroll(); scrollTicking = false; });
+          scrollTicking = true;
+        }
+      }, { passive: true });
+
+      if (!reduceMotion) {
+        window.addEventListener('pointermove', (event) => {
+          const x = (event.clientX / window.innerWidth - .5) * 2;
+          const y = (event.clientY / window.innerHeight - .5) * 2;
+          root.style.setProperty('--pointer-x', x.toFixed(3));
+          root.style.setProperty('--pointer-y', y.toFixed(3));
+        }, { passive: true });
+      }
+
+      menuButton.addEventListener('click', () => {
+        const open = menuButton.getAttribute('aria-expanded') !== 'true';
+        menuButton.setAttribute('aria-expanded', String(open));
+        menuButton.setAttribute('aria-label', open ? 'Tutup menu' : 'Buka menu');
+        header.classList.toggle('menu-open', open);
+      });
+
+      nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.setAttribute('aria-label', 'Buka menu');
+        header.classList.remove('menu-open');
+      }));
+
+      function syncMatureButtons() {
+        matureTriggers.forEach((button) => {
+          button.setAttribute('aria-pressed', String(matureEnabled));
+          if (button.classList.contains('policy-toggle')) {
+            button.textContent = matureEnabled ? 'Sembunyikan Proyek 18+' : 'Atur Tampilan 18+';
+          }
+        });
+      }
+
+      function disableMature() {
+        matureEnabled = false;
+        document.body.classList.remove('mature-on');
+        syncMatureButtons();
+      }
+
+      matureTriggers.forEach((button) => button.addEventListener('click', () => {
+        if (matureEnabled) {
+          disableMature();
+        } else {
+          pendingProject = null;
+          ageDialog.showModal();
+        }
+      }));
+
+      document.getElementById('age-confirm').addEventListener('click', () => {
+        matureEnabled = true;
+        document.body.classList.add('mature-on');
+        syncMatureButtons();
+        ageDialog.close();
+        if (pendingProject) {
+          openProject(pendingProject);
+          pendingProject = null;
+        }
+      });
+
+      document.getElementById('age-cancel').addEventListener('click', () => {
+        pendingProject = null;
+        ageDialog.close();
+      });
+
+      ageDialog.addEventListener('click', (event) => {
+        if (event.target === ageDialog) ageDialog.close();
+      });
+
+      function applyFilter(type) {
+        let visible = 0;
+        projectCards.forEach((card) => {
+          const show = type === 'all' || card.dataset.type === type;
+          card.classList.toggle('is-hidden', !show);
+          if (show) visible += 1;
+        });
+        emptyState.classList.toggle('is-visible', visible === 0);
+        filterStatus.textContent = visible === 1 ? '1 proyek ditampilkan' : `${visible} proyek ditampilkan`;
+      }
+
+      filterButtons.forEach((button) => button.addEventListener('click', () => {
+        filterButtons.forEach((item) => item.setAttribute('aria-pressed', 'false'));
+        button.setAttribute('aria-pressed', 'true');
+        applyFilter(button.dataset.filter);
+      }));
+
+      function openProject(key) {
+        const data = projectData[key];
+        if (!data) return;
+        document.getElementById('detail-title').textContent = data.title;
+        document.getElementById('detail-description').textContent = data.description;
+        document.getElementById('detail-engine').textContent = data.engine;
+        document.getElementById('detail-platform').textContent = data.platform;
+        document.getElementById('detail-status').textContent = data.status;
+        document.getElementById('detail-scope').textContent = data.scope;
+        projectDialog.showModal();
+      }
+
+      document.querySelectorAll('.detail-button').forEach((button) => button.addEventListener('click', () => {
+        const card = button.closest('.project-card');
+        if (card.dataset.mature === 'true' && !matureEnabled) {
+          pendingProject = card.dataset.project;
+          ageDialog.showModal();
+          return;
+        }
+        openProject(card.dataset.project);
+      }));
+
+      document.getElementById('detail-close').addEventListener('click', () => projectDialog.close());
+      projectDialog.addEventListener('click', (event) => {
+        if (event.target === projectDialog) projectDialog.close();
+      });
+
+      const revealItems = document.querySelectorAll('[data-reveal]');
+      if ('IntersectionObserver' in window && !reduceMotion) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: .08, rootMargin: '0px 0px -6% 0px' });
+        revealItems.forEach((item) => observer.observe(item));
+      } else {
+        revealItems.forEach((item) => item.classList.add('is-visible'));
+      }
+
+      document.getElementById('year').textContent = new Date().getFullYear();
+      updateScroll();
+      syncMatureButtons();
+    })();
+  </script>
+</body>
+</html>
