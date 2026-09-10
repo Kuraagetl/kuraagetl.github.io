@@ -673,12 +673,12 @@
 
     .project-card:hover .project-cover svg { transform: scale(1.025); }
 
-    .project-card[data-mature="true"] .project-cover svg {
+    .project-card[data-mature="false"] .project-cover svg {
       filter: blur(18px) saturate(.55);
       transform: scale(1.08);
     }
 
-    body.mature-on .project-card[data-mature="true"] .project-cover svg {
+    body.mature-on .project-card[data-mature="false"] .project-cover svg {
       filter: none;
       transform: scale(1);
     }
@@ -1211,6 +1211,14 @@
       .archive-stage, .hero-art, .script-sheet, .orbit { transform: none !important; }
       [data-reveal] { transform: none; }
     }
+    .nav-mature,
+#konten-dewasa,
+.mature-cover,
+.faq-list details:last-child,
+.footer-links a[href="#konten-dewasa"],
+#age-dialog {
+  display: none !important;
+}
   </style>
 </head>
 <body>
@@ -1303,7 +1311,7 @@
       </div>
 
       <div class="project-grid">
-        <article class="project-card" data-type="vn" data-mature="true" data-project="subahibi" data-reveal>
+        <article class="project-card" data-type="vn" data-mature="false" data-project="subahibi" data-reveal>
           <div class="project-cover">
             <svg viewBox="0 0 800 520" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sampul abstrak Subarashiki Hibi yang disensor">
               <defs>
@@ -1336,7 +1344,7 @@
           </div>
         </article>
 
-        <article class="project-card" data-type="vn" data-mature="true" data-project="kojyo" data-reveal>
+        <article class="project-card" data-type="vn" data-mature="false" data-project="kojyo" data-reveal>
           <div class="project-cover">
             <svg viewBox="0 0 700 520" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sampul abstrak Teori Hampa di Kastil yang Terisolasi yang disensor">
               <defs>
